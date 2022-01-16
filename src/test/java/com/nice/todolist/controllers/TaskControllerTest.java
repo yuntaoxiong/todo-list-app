@@ -61,7 +61,28 @@ public class TaskControllerTest {
     	Mockito.reset(taskServiceMock);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
-    
+
+    @Test
+    public void findById_TaskEntryFound_ShouldReturnFoundTaskEntry() throws Exception {
+        Task found = TestUtil.getTestTask();
+
+        when(taskServiceMock.findById(1L)).thenReturn(found);
+
+        mockMvc.perform(get("/api/tasks/{id}", 1L)
+                        .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                        .accept(TestUtil.APPLICATION_JSON_UTF8)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("taskName")))
+                .andExpect(jsonPath("$.description", is("taskDescription")));
+
+        verify(taskServiceMock, times(1)).findById(1L);
+        verifyNoMoreInteractions(taskServiceMock);
+    }
+
+
     @Test
     public void add_TaskEntryWithTooLongValues_ShouldReturnValidationErrors() throws Exception {
         TaskDto dto = new TaskDto();

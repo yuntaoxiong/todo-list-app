@@ -173,6 +173,7 @@ public class TaskServiceTest {
         assertThat(actual.getDescription(), is(dto.getDescription()));
     }
 
+
     @Test(expected = TodoNotFoundException.class)
     public void update_TaskEntryNotFound_ShouldThrowException() throws TodoNotFoundException {
     	TaskDto dto = TestUtil.getUpdatedTestTaskDto();
